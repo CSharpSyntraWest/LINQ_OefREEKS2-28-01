@@ -31,8 +31,38 @@ namespace LINQ_OefREEKS2_27_01
             //Oefening1();
             //Oefening2();
             // Oefening3();
-            Oefening4();
+            //Oefening4();
+            //Oefening5();
+            Oefening6();
             Console.ReadKey();
+        }
+
+        private static void Oefening6()
+        {
+            //6.Geef de lijst van alle productNamen en hun categoryNaam
+        }
+
+        private static void Oefening5()
+        {//5. Geef de gemiddelde prijs van de produkten per category
+            var oef5MethodSyntax = Products.ProductList.GroupBy(prod => prod.Category).Select(prodGroup =>
+                        new {
+                            Category = prodGroup.Key,
+                            GemPrijs = prodGroup.Average(p => p.UnitPrice)
+                        });
+
+            var oef5QuerySyntax = from prod in Products.ProductList
+                      group prod by prod.Category into prodGroep
+                      select new
+                      {
+                          Category = prodGroep.Key,
+                          GemPrijs = prodGroep.Average(p => p.UnitPrice)
+                      };
+            //
+            foreach (var item in oef5QuerySyntax)
+            {
+                Console.WriteLine($"Categorie: {item.Category} - Gemiddelde Prijs: " + item.GemPrijs.ToString("F2") );
+            }
+           
         }
 
         private static void Oefening4()
@@ -80,9 +110,19 @@ namespace LINQ_OefREEKS2_27_01
 
         private static void Oefening2()
         {
-            var oef2MethodNotatie = Products.ProductList.Where(p => p.Category == "Seafood")
+            var firstItemMethodNotatie = Products.ProductList.Where(p => p.Category == "Seafood")
                 .Select(p => new { productNaam = p.ProductName, ID = p.ProductID })
                 .FirstOrDefault();
+
+            var firstItemQueryNotatie = (from p in Products.ProductList
+                                   where p.Category == "Seafood"
+                                   select new
+                                   {
+                                       ID = p.ProductID,
+                                       ProductNaam = p.ProductName
+                                   }).FirstOrDefault();
+
+            Console.WriteLine("Eerste product in de lijst van category 'Seafood': " + firstItemQueryNotatie);
         }
 
         private static void Oefening1()
