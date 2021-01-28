@@ -13,7 +13,7 @@ namespace LINQ_OefREEKS2_27_01
         static void Main(string[] args)
         {
             //GroupJoinQuerySyntax();
-           // GroupJoinMethodSyntax();
+            // GroupJoinMethodSyntax();
             //foreach (var p in Products.ProductList)
             //{
             //    Console.WriteLine(p);
@@ -28,8 +28,61 @@ namespace LINQ_OefREEKS2_27_01
             //        Console.WriteLine("\t" + order);
             //    }
             //}
-            Oefening1();
+            //Oefening1();
+            //Oefening2();
+            // Oefening3();
+            Oefening4();
             Console.ReadKey();
+        }
+
+        private static void Oefening4()
+        { 
+            //4. Geef voor elke category de produkten die de laagste prijs hebben in deze category
+            var oef4QuerySyntax = from prod in Products.ProductList
+                                  group prod by prod.Category into prodGroep
+                                  let minPrijs = (from p in prodGroep select p.UnitPrice).Min() //prodGroep.Min(p => p.UnitPrice) //tijdelijk variable minPrijs
+                                  select new
+                                  {
+                                      Categorie = prodGroep.Key,
+                                      ProductenAanMinimPrijs = from p in prodGroep where p.UnitPrice==minPrijs select p //prodGroep.Where(p => p.UnitPrice == minPrijs)
+                                  };
+            foreach(var item in oef4QuerySyntax)
+            {
+                Console.WriteLine("Categorie " + item.Categorie + ":" );
+                foreach (var product in item.ProductenAanMinimPrijs)
+                {
+                    Console.WriteLine($"\tProduct: " + product.ProductName);
+                }
+            }
+        }
+
+        private static void Oefening3()
+        {
+            var oef3QueryNotatie = from prod in Products.ProductList
+                                   group prod by prod.Category into prodGroup
+                                   select new
+                                   {
+                                       Category = prodGroup.Key,
+                                       AantalProducten = prodGroup.Count()
+                                   };
+            var oef3MethodNotatie = Products.ProductList.GroupBy(prod => prod.Category).Select(prodGroup => 
+                new {
+                    Category= prodGroup.Key,
+                    AantalProducten = prodGroup.Count()
+                });
+           
+            foreach (var item in oef3MethodNotatie)
+            {
+                 Console.WriteLine("Categorie:" + item.Category + "- Aantal Producten:" + item.AantalProducten);
+                //Console.WriteLine(item);
+            }
+        }
+
+        private static void Oefening2()
+        {
+            var oef2MethodNotatie = Products.ProductList.Where(p => p.Category == "Seafood")
+                .Select(p => new { productNaam = p.ProductName, ID = p.ProductID })
+                .FirstOrDefault();
         }
 
         private static void Oefening1()
