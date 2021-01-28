@@ -33,13 +33,68 @@ namespace LINQ_OefREEKS2_27_01
             // Oefening3();
             //Oefening4();
             //Oefening5();
-            Oefening6();
+            //Oefening6();
+            //Oefening7();
+            //Oefening8();
+            //Oefening9();
+            Oefening10();
             Console.ReadKey();
+        }
+
+        private static void Oefening10()
+        {
+            bool b_oef10 = Products.ProductList.Any(p => p.ProductName.Contains("Coffee"));
+            Console.WriteLine("Bestaat er een product waarvan de Naam 'Coffee' bevat?" + b_oef10);
+
+        }
+
+        private static void Oefening9()
+        {
+            //Geef het eerste element terug uit products waarvan de Category="Beverages"
+            var oef9MethodeNotatie = Products.ProductList.Where(p => p.Category == "Beverages").Take(1);
+            var oef9MethodNotatie2 = Products.ProductList.Where(p => p.Category == "Beverages").FirstOrDefault();
+            Product eersteProductUitCatBeverages = (from p in Products.ProductList
+                                    where p.Category == "Beverages"
+                                    select p).FirstOrDefault(); //of .Take(1) 
+            Console.WriteLine(eersteProductUitCatBeverages);
+        }
+
+        private static void Oefening8()
+        {
+            var oef8MethodNotatie = Products.ProductList.SkipWhile(p => p.UnitPrice < 20.00M);
+            var oef8QueryNotatie = (from p in Products.ProductList select p).SkipWhile(p => p.UnitPrice < 20.00M);
+            foreach (var item in oef8MethodNotatie)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        private static void Oefening7()
+        {
+            //7. Geef de eerste 5 produkten uit de lijst waarvan het aantal unitsInStock =0
+            var oef7MethodNotatieList = Products.ProductList.Where(p => p.UnitsInStock == 0).Take(5).ToList();
+            var oef7QueryNotatieList = (from p in Products.ProductList
+                                    where p.UnitsInStock == 0
+                                    select p).Take(5).ToList();
+            if(oef7MethodNotatieList.Count() == 0)
+                Console.WriteLine("Alle producten hebben UnitsInStock > 0");
+            else
+                oef7MethodNotatieList.ForEach(p =>  Console.WriteLine(p));
+
         }
 
         private static void Oefening6()
         {
             //6.Geef de lijst van alle productNamen en hun categoryNaam
+            var oef6MethodNotatie = Products.ProductList.Select(b => new { ProductNaam = b.ProductName, CategorieNaam = b.Category });
+            var oef6QueryNotatieList = (from prod in Products.ProductList
+                                   select new
+                                   {
+                                       ProductNaam = prod.ProductName,
+                                       CategorieNaam = prod.Category
+                                   }).ToList();
+            oef6QueryNotatieList.ForEach(item => Console.WriteLine(item));
+
         }
 
         private static void Oefening5()
